@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.metrics import classification_report
 from cmlbootstrap import CMLBootstrap
 
-model_id = "16"
+model_id = "268"
 
 # Get the various Model CRN details
 HOST = os.getenv("CDSW_API_URL").split(
@@ -29,6 +29,10 @@ metrics_df = pd.io.json.json_normalize(model_metrics["metrics"])
 latest_aggregate_metric = metrics_df.dropna(subset=["metrics.accuracy"]).sort_values('startTimeStampMs')[-1:]["metrics.accuracy"]
 
 
-latest_aggregate_metric.to_list()[0] < 0.6
-
-
+if latest_aggregate_metric.to_list()[0] < 0.6:
+  print("model is below threshold, retraining")
+  cml.start_job(244,{})
+  #TODO reploy new model
+else:
+  print("model does not need to be retrained")
+  
