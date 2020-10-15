@@ -1,0 +1,6 @@
+"Model Explainer 14102020105006":
+  hive_table_qualified_names:                # this is a predefined key to link to training data
+    - "airline_ontime_parquet.flights_external@cm"               # the qualifiedName of the hive_table object representing                
+  metadata:                                  # this is a predefined key for additional metadata
+    query: "select * from historical_data"   # suggested use case: query used to extract training data
+    training_file: "4_train_models.py"       # suggested use case: training file used

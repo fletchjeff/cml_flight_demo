@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js'></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+
+        body {
+            color: white;
+            font-family: 'Open Sans', sans-serif;
+            background-image: url("sunset_germany_airport_frankfurt_aircraft_aviation_terminal_boeing-456915.jpg");
+            background-repeat: no-repeat;
+        }
+
+        .bigger {
+            font-size: 1.2em;
+            line-height: 2em;
+        }
+
+        .fld{border: 1px dotted #ccc; background: white; font-family: monospace; padding: 10px 20px; font-size: 18px; margin: 5px 5px 5px 0; color: red;}
+        .fld:focus { background-color:lightgray; outline: none;}
+        .btn{border: 1px dotted #ccc; background: white; font-family: monospace; padding: 10px 20px; font-size: 18px; margin: 5px 5px 5px 0; color: black;}
+        .btn:hover { background-color:lightgray; outline: none;}
+        label { display: inline-block; width: 150px; text-align: right;}
+      
+      
+    </style>
+</head>
+
+<body>
+    <h1>Cancelled Flight Prediction</h1>
+        <div class="bigger">Flight Info</div>
+  
+        <div class="frm">
+            <label for="ca">Carrier:</label> <input class="fld" type="text" value="US" id="ca"><br>
+            <label for="fn">FlightNum:</label> <input class="fld" type="text" value="2040" id="fn"><br>
+            <label for="or">Origin:</label> <input class="fld" type="text" value="DCA" id="or"><br>
+            <label for="de">Destination:</label> <input class="fld" type="text" value="BOS" id="de"><br>
+            <label for="dt">Departure Time:</label> <input class="fld" type="text" value="1630" id="dt"><br>
+            <label for="fd">Flight Duration:</label> <input class="fld" type="text" value="81" id="fd"><br>
+            <label for="di">Distance:</label> <input class="fld" type="text" value="399" id="di"><br>
+            <label for="we">Week:</label> <input class="fld" type="text" value="16" id="we"><br>
+            <label for="hr">Hour:</label> <input class="fld" type="text" value="16" id="hr"><br>
+          <input type="submit" class="btn" value="Will it be cancelled?" onclick="go_fetch()"  style="float:left;"></input><div class="bigger" id='pred_value'>Predicted Value: </div>
+        </div>
+  
+        
+
+
+        
+    </div>
+    <script>
+
+        var url = window.location.origin.substr(0,window.location.origin.indexOf(":")+1) + "//" + "modelservice." + window.location.origin.substr(window.location.origin.indexOf(".")+1) + '/model'
+        var api_key = "m59p14az8ltp69smfq0p4js3n91vor9i"
+        //var model_api_key = "d89d4dd192b05a1a7057934e3108d74f7500fe936db438a99665b1ed660c4606.2007563e432a9badc8c06246f22fa650b6611c7a876d79ad7082a9011db91807"
+
+      
+        function go_fetch() {
+            var post_data = {
+                accessKey:api_key,
+                request: { feature : d3.select('#ca').property("value")+","+
+                          d3.select('#fn').property("value")+","+
+                          d3.select('#or').property("value")+","+
+                          d3.select('#de').property("value")+","+
+                          d3.select('#dt').property("value")+","+
+                          d3.select('#fd').property("value")+","+
+                          d3.select('#di').property("value")+","+
+                          d3.select('#we').property("value")+","+
+                          d3.select('#hr').property("value") } 
+            };
+
+            fetch(url, {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(post_data), // data can be `string` or {object}!
+                    headers: {
+                        'Content-Type': 'application/json',
+                        //'Authorization' : 'Bearer ' + model_api_key                        
+                    }
+                })
+                .then(res => res.json())
+                .then(response => d3.select("#pred_value").text("Predicted Value: " + (response.response.prediction.prediction == 0 ? "Not Cancelled" : "Cancelled")))
+                .catch(error => console.error('Error:', error));
+        }
+
+    </script>
+</body>
