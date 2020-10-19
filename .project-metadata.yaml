@@ -1,0 +1,84 @@
+name: Flight Demo
+description: Predicting flight delays
+author: Cloudera Engineer
+specification_version: 1.0
+prototype_version: 1.0
+date: "2020-09-29"
+api_version: 1
+
+ 
+tasks:
+  - type: create_job
+    name: Install dependencies
+    entity_label: install_deps
+    script: 0_bootstrap.py
+    arguments: None
+    short_summary: Job to install dependencies and download training data.
+    environment:
+      TASK_TYPE: CREATE/RUN_JOB
+    kernel: python3
+
+  - type: run_job
+    entity_label: install_deps
+    short_summary: Running install dependencies training job.
+    long_summary: >-
+      Running the job to install dependencies.
+
+  - type: create_job
+    name: Train Flight Delay Prediction Model
+    entity_label: train_model
+    script: 5_model_train.py
+    arguments: None
+    short_summary: Job to train model.
+    environment:
+      TASK_TYPE: CREATE/RUN_JOB
+    kernel: python3
+
+  - type: run_job
+    entity_label: train_model
+    short_summary: Run model training job.
+    long_summary: >-
+      Running the job to train models.
+
+  - type: create_model
+    name: Create Flight Delay Prediction Model  Endpoint
+    entity_label: flight_model
+    description: This model api endpoint predicts flight delays
+    short_summary: Create the flight delay prediction model api endpoint
+    access_key_environment_variable: SHTM_ACCESS_KEY
+    # default_resources:
+    #   cpu: 1
+    #   memory: 2
+    default_replication_policy:
+      type: fixed
+      num_replicas: 1
+
+    # auth_enabled: false
+  - type: build_model
+    name: Flight Delay Prediction Model API Endpoint
+    entity_label: flight_model
+    comment: Build flight prediction model
+    examples:
+      - request: ''
+        response: ""
+    target_file_path: 6_model_serve.py
+    target_function_name: predict_cancelled
+    kernel: python3
+    environment_variables:
+      TASK_TYPE: CREATE/BUILD/DEPLOY_MODEL
+
+  - type: deploy_model
+    name: telco_churn_model
+    entity_label: flight_model
+    cpu: 1
+    gpu: 0
+    environment_variables:
+      TASK_TYPE: CREATE/BUILD/DEPLOY_MODEL
+
+  - type: start_application
+    name: Application to serve flight prediction front end app UI
+    subdomain: churn
+    script: 7_application.py
+    environment_variables:
+      TASK_TYPE: START_APPLICATION
+    kernel: python3
