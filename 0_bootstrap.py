@@ -45,5 +45,6 @@ except:
   os.environ["STORAGE"] = storage
 
 # Upload the data to the cloud storage
+!mkdir data
 !cp all_flight_data.tgz data
 !cd data && tar xjvf all_flight_data.tgz
