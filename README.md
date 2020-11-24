@@ -28,6 +28,8 @@ Open the file `0_bootstrap.py` in a normal workbench python3 session. You only n
 
 ### 1 - Convert Hive to External
 
+Open `1_convert_hive_to_external.py` in a Workbench session: python3, 1 CPU, 2 GB. Run the file.
+
 ### 2 - Data Analysis
 
 This is a Jupyter Notebook that does some basic data exploration and visualization. It is here to show how this would be part of the data science workflow.
@@ -38,7 +40,7 @@ At the top of the page click **Cells > Run All**.
 
 ### 3 - Data Processing
 
-
+Open `3_data_processing.py` in a Workbench session: python3, 1 CPU, 2 GB. Run the file.
 
 ### 4 - Model Build
 
