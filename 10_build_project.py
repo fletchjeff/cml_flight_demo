@@ -154,7 +154,7 @@ create_application_params = {
     "description": "Web App to Display Flight Predictions",
     "type": "manual",
     "script": "7_application.py", 
-    "environment": {"api_key": access_key},
+    "environment": {"SHTM_ACCESS_KEY": access_key},
     "kernel": "python3", 
     "cpu": 1, 
     "memory": 2,
@@ -184,4 +184,4 @@ HTML("<a href='{}'>Open Application UI</a>".format(application_url))
 
 # This will run the model operations section that makes calls to the model to track
 # mertics and track metric aggregations
-exec(open("7a_ml_ops_simulation.py").read())
+exec(open("8_model_simulation.py").read())
