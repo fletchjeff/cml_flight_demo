@@ -16,6 +16,13 @@ app= Flask(__name__,static_url_path='')
 def home():
     return "<script> window.location.href = '/flask_files/index.html'</script>"
 
+@app.route('/getkey')
+def get_key():
+    access_key= ""
+    if os.environ.get("SHTM_ACCESS_KEY") is not None:
+        access_key = os.environ.get("SHTM_ACCESS_KEY","")
+    return {"api_key":access_key}
+
 
 @app.route('/flask_files/<path:path>')
 def send_file(path):

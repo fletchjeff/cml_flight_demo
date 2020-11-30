@@ -9,6 +9,7 @@
 # abfs://[something] and on CDSW cluster, it will be hdfs://[something]
 
 # Install the requirements
+!pip3 install -U pip
 !pip3 install -r requirements.txt
 
 # Create the directories and upload data
@@ -44,5 +45,6 @@ except:
   os.environ["STORAGE"] = storage
 
 # Upload the data to the cloud storage
+!mkdir data
 !cp all_flight_data.tgz data
 !cd data && tar xjvf all_flight_data.tgz

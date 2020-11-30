@@ -55,10 +55,31 @@
     <script>
 
         var url = window.location.origin.substr(0,window.location.origin.indexOf(":")+1) + "//" + "modelservice." + window.location.origin.substr(window.location.origin.indexOf(".")+1) + '/model'
-        var api_key = "m59p14az8ltp69smfq0p4js3n91vor9i"
-        //var model_api_key = "d89d4dd192b05a1a7057934e3108d74f7500fe936db438a99665b1ed660c4606.2007563e432a9badc8c06246f22fa650b6611c7a876d79ad7082a9011db91807"
 
-      
+        function get_key(){
+            fetch('/getkey')
+                .then(
+                    function(response) {
+                        if (response.status !== 200) {
+                            console.log('Looks like there was a problem. Status Code: ' +
+                            response.status);
+                            return;
+                        }
+
+                        // Examine the text in the response
+                        response.json().then(function(data) {
+                            console.log("api key. is", data)
+                            api_key = data.api_key 
+                            
+                        });
+                    }
+                )
+                .catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
+        }
+        get_key()
+        
         function go_fetch() {
             var post_data = {
                 accessKey:api_key,

@@ -9,27 +9,21 @@ import copy
 import time
 
 
-## Set the model ID
-# Get the model id from the model you deployed in step 5. These are unique to each 
-# model on CML.
-
-model_id = "268"
+## Set the model ID from deployed model
 
 flights_data_df = pd.read_csv("data/all_flight_data.csv")
 
 # Get the various Model CRN details
-HOST = os.getenv("CDSW_API_URL").split(
-    ":")[0] + "://" + os.getenv("CDSW_DOMAIN")
-USERNAME = os.getenv("CDSW_PROJECT_URL").split(
-    "/")[6]  # args.username  # "vdibia"
+HOST = os.getenv("CDSW_API_URL").split(":")[0] + "://" + os.getenv("CDSW_DOMAIN")
+USERNAME = os.getenv("CDSW_PROJECT_URL").split("/")[6]  # args.username  # "vdibia"
 API_KEY = os.getenv("CDSW_API_KEY") 
 PROJECT_NAME = os.getenv("CDSW_PROJECT")  
 
 cml = CMLBootstrap(HOST, USERNAME, API_KEY, PROJECT_NAME)
 
-latest_model = cml.get_model({"id": model_id, "latestModelDeployment": True, "latestModelBuild": True})
+latest_model = cml.get_models({"latestModelDeployment": True, "latestModelBuild": True})[0] # Note - this assumes 10_build_project.py is run before any models are built
 
-Model_CRN = latest_model ["crn"]
+Model_CRN = latest_model["crn"]
 Deployment_CRN = latest_model["latestModelDeployment"]["crn"]
 
 while True:

@@ -6,7 +6,6 @@ prototype_version: 1.0
 date: "2020-09-29"
 api_version: 1
 
- 
 tasks:
   - type: create_job
     name: Install dependencies
@@ -36,6 +35,8 @@ tasks:
 
   - type: run_job
     entity_label: train_model
+    cpu: 4
+    memory: 8
     short_summary: Run model training job.
     long_summary: >-
       Running the job to train models.
@@ -59,7 +60,7 @@ tasks:
     entity_label: flight_model
     comment: Build flight prediction model
     examples:
-      - request: ''
+      - request: ""
         response: ""
     target_file_path: 6_model_serve.py
     target_function_name: predict_cancelled
