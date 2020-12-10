@@ -11,15 +11,16 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 
-cancelled_flights = pd.read_csv("data/all_flight_data.csv")
+cancelled_flights = pd.read_csv("data/all_flight_data_spark.csv")
 cancelled_flights = cancelled_flights.dropna()
 
 
-X = cancelled_flights[['uniquecarrier','flightnum','origin','dest','crsdeptime','crselapsedtime','distance','week','hour']]
+#X = cancelled_flights[['uniquecarrier','flightnum','origin','dest','crsdeptime','crselapsedtime','distance','week','hour']]
+X = cancelled_flights[['OP_CARRIER','OP_CARRIER_FL_NUM','ORIGIN','DEST','CRS_DEP_TIME','CRS_ELAPSED_TIME','DISTANCE','WEEK','HOUR']]
 
-y = cancelled_flights[['cancelled']]
+y = cancelled_flights[['CANCELLED']]
 
-categorical_cols = ['uniquecarrier','flightnum','origin','dest']
+categorical_cols = ['OP_CARRIER','OP_CARRIER_FL_NUM','ORIGIN','DEST']
 
 ct = ColumnTransformer(
     [('le', OneHotEncoder(), categorical_cols)],
