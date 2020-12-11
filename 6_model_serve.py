@@ -18,7 +18,7 @@ def predict_cancelled(args):
   inputs[7] = int(inputs[7])
   inputs[8] = int(inputs[8])
 
-  input_cols = ['uniquecarrier','flightnum','origin','dest','crsdeptime','crselapsedtime','distance','week','hour']
+  input_cols = ['OP_CARRIER','OP_CARRIER_FL_NUM','ORIGIN','DEST','CRS_DEP_TIME','CRS_ELAPSED_TIME','DISTANCE','WEEK','HOUR']
   input_df = pd.DataFrame([inputs],columns=input_cols )
 
   input_transformed = ct.transform(input_df)

@@ -11,7 +11,7 @@ import time
 
 ## Set the model ID from deployed model
 
-flights_data_df = pd.read_csv("data/all_flight_data.csv")
+flights_data_df = pd.read_csv("data/all_flight_data_spark.csv")
 
 # Get the various Model CRN details
 HOST = os.getenv("CDSW_API_URL").split(":")[0] + "://" + os.getenv("CDSW_DOMAIN")
@@ -21,10 +21,13 @@ PROJECT_NAME = os.getenv("CDSW_PROJECT")
 
 cml = CMLBootstrap(HOST, USERNAME, API_KEY, PROJECT_NAME)
 
-latest_model = cml.get_models({"latestModelDeployment": True, "latestModelBuild": True})[0] # Note - this assumes 10_build_project.py is run before any models are built
+model_id = "33"
+
+latest_model = cml.get_model({"id": model_id, "latestModelDeployment": True, "latestModelBuild": True})
 
 Model_CRN = latest_model["crn"]
 Deployment_CRN = latest_model["latestModelDeployment"]["crn"]
+
 
 while True:
   predicted_result = []
@@ -32,21 +35,24 @@ while True:
   start_time_ms = int(round(time.time() * 1000))
   for i in range(100):
     input_data = flights_data_df.sample(n=1)[[
-      'uniquecarrier',
-      'flightnum',
-      'origin',
-      'dest',
-      'crsdeptime',
-      'crselapsedtime',
-      'distance',
-      'hour',
-      'week',
-      'cancelled']].to_numpy()[0]
+      'OP_CARRIER',
+      'OP_CARRIER_FL_NUM',
+      'ORIGIN',
+      'DEST',
+      'CRS_DEP_TIME',
+      'CRS_ELAPSED_TIME',
+      'DISTANCE',
+      'HOUR',
+      'WEEK',
+      'CANCELLED']].to_numpy()[0]
     
     try:
 
+      input_data[1] = int(input_data[1])
+      input_data[4] = int(input_data[4])  
       input_data[5] = int(input_data[5])
       input_data[6] = int(input_data[6])
+      input_data[9] = int(input_data[9])
 
       input_data_string = ""
       for record in input_data[:-1]:
