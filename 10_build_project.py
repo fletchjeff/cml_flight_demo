@@ -113,7 +113,7 @@ default_engine_details = cml.get_default_engine({})
 default_engine_image_id = default_engine_details["id"]
 
 # Create Model
-example_model_input = {} # to-do
+example_model_input = {"feature": "US,2040,DCA,BOS,1630,81,399,16,16"} # to-do
 
 create_model_params = {
     "projectId": project_id,

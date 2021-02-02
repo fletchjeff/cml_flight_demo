@@ -7,6 +7,7 @@ from cmlbootstrap import CMLBootstrap
 import seaborn as sns
 import copy
 import time
+import math
 
 
 ## Set the model ID from deployed model
@@ -21,7 +22,7 @@ PROJECT_NAME = os.getenv("CDSW_PROJECT")
 
 cml = CMLBootstrap(HOST, USERNAME, API_KEY, PROJECT_NAME)
 
-model_id = "33"
+model_id = "135"
 
 latest_model = cml.get_model({"id": model_id, "latestModelDeployment": True, "latestModelBuild": True})
 
@@ -32,7 +33,7 @@ Deployment_CRN = latest_model["latestModelDeployment"]["crn"]
 while True:
   predicted_result = []
   actual_result = []
-  start_time_ms = int(round(time.time() * 1000))
+  start_time_ms = int(math.floor(time.time() * 1000))
   for i in range(100):
     input_data = flights_data_df.sample(n=1)[[
       'OP_CARRIER',
@@ -68,7 +69,7 @@ while True:
     except:
       print("invalid row")
     time.sleep(0.2)
-  end_time_ms = int(round(time.time() * 1000))
+  end_time_ms = int(math.floor(time.time() * 1000))
   accuracy = classification_report(actual_result,predicted_result,output_dict=True)['accuracy']
   cdsw.track_aggregate_metrics({"accuracy": accuracy}, start_time_ms , end_time_ms, model_deployment_crn=Deployment_CRN)
   print("adding accuracy measure of" + str(accuracy))
